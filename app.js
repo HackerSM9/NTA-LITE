@@ -258,11 +258,76 @@
   const $ = (sel, root = document) => root.querySelector(sel);
   const $$ = (sel, root = document) => Array.from(root.querySelectorAll(sel));
 
+  // ─────────────────────────────────────────────────────────────
+  // Theme Engine — Sleek Gradient Dark Purple / Regular NTA Light
+  // Every stage keeps its own default theme; the user may override
+  // it at any time via the floating toggle. Overrides are remembered
+  // per stage group (so a refresh mid-exam keeps the chosen theme),
+  // while untouched stages always open with their default theme.
+  // ─────────────────────────────────────────────────────────────
+  const THEME_STORAGE_KEY = "sm9_cbt_theme_v1";
+  const STAGE_DEFAULT_THEME = Object.freeze({
+    load: "dark",
+    error: "dark",
+    instructions: "light",
+    exam: "light",
+    result: "dark",
+  });
+
+  // Instructions + test are one "stage" for theme purposes: an
+  // override made on instructions carries into the exam (and back).
+  function stageBucket(p) {
+    return p === "instructions" || p === "exam" ? "test-stage" : p;
+  }
+
+  function getStoredThemeOverride() {
+    try {
+      const raw = localStorage.getItem(THEME_STORAGE_KEY);
+      if (!raw) return null;
+      const data = JSON.parse(raw);
+      if (data && typeof data.stage === "string" && (data.theme === "dark" || data.theme === "light")) {
+        return data;
+      }
+    } catch (_) { /* storage unavailable (private mode, etc.) */ }
+    return null;
+  }
+
+  function applyTheme(theme, saveOverride) {
+    document.documentElement.setAttribute("data-theme", theme);
+    const btn = $("#theme-toggle");
+    if (btn) {
+      btn.setAttribute("aria-pressed", String(theme === "light"));
+      btn.title = theme === "dark" ? "Switch to Light Mode" : "Switch to Dark Mode";
+    }
+    if (saveOverride) {
+      try {
+        localStorage.setItem(THEME_STORAGE_KEY, JSON.stringify({ stage: stageBucket(phase), theme }));
+      } catch (_) { /* ignore storage failures */ }
+    }
+  }
+
+  // Called whenever a screen opens: restores that stage's own default
+  // theme unless the user has manually overridden this stage group.
+  function applyStageTheme() {
+    const override = getStoredThemeOverride();
+    const bucket = stageBucket(phase);
+    const theme = override && override.stage === bucket
+      ? override.theme
+      : (STAGE_DEFAULT_THEME[phase] || "dark");
+    applyTheme(theme, false);
+  }
+
+  function toggleTheme() {
+    const current = document.documentElement.getAttribute("data-theme") === "light" ? "light" : "dark";
+    applyTheme(current === "dark" ? "light" : "dark", true);
+  }
+
   function showScreen(id) {
     $$(".screen").forEach((s) => s.classList.remove("active"));
     const el = document.getElementById(id);
     if (el) el.classList.add("active");
     phase = id.replace("screen-", "");
+    applyStageTheme();
   }
 
   function escapeHtml(str) {
@@ -907,7 +972,7 @@
           <td><strong class="txt-green">${escapeHtml(correctStr)}</strong></td>
           <td>
             <span class="${g.status === 'correct' ? 'txt-green' : g.status === 'incorrect' ? 'txt-red' : ''}">${escapeHtml(userAnsStr)}</span>
-            <span style="color:#8b949e; font-size:11px; margin-left:6px;">(${formatSecsToMinSec(resp.timeSpentSec)})</span>
+            <span class="ak-time">(${formatSecsToMinSec(resp.timeSpentSec)})</span>
           </td>
           <td>
             <button type="button" class="btn-view-detail" data-qid="${q.id}">
@@ -959,11 +1024,11 @@
         .map((opt) => {
           const isUser = userSelected.has(opt.key);
           const isCorrect = correctKeys.has(opt.key);
-          let borderCls = "";
-          if (isCorrect) borderCls = "style='border-color:#3fb950; background:rgba(46,160,67,0.1);'";
-          else if (isUser && !isCorrect) borderCls = "style='border-color:#f85149; background:rgba(248,81,73,0.1);'";
+          let stateCls = "";
+          if (isCorrect) stateCls = "opt-state-correct";
+          else if (isUser && !isCorrect) stateCls = "opt-state-user";
 
-          return `<div class="option-item" ${borderCls}>
+          return `<div class="option-item ${stateCls}">
             <span class="option-key">${escapeHtml(opt.key)})</span>
             <span class="option-text">${escapeHtml(opt.text)}</span>
             ${isCorrect ? '<span class="txt-green" style="font-weight:bold;">[Correct]</span>' : ''}
@@ -1069,6 +1134,9 @@
       $("#btn-begin-exam").disabled = true;
       showScreen("screen-instructions");
     });
+
+    // Global theme toggle (available on every stage)
+    $("#theme-toggle").addEventListener("click", toggleTheme);
 
     $("#btn-error-back").addEventListener("click", () => showScreen("screen-load"));
     $("#btn-instr-back").addEventListener("click", () => showScreen("screen-load"));
