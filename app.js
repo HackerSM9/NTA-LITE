@@ -262,6 +262,7 @@
     const el = document.getElementById(id);
     if (el) el.classList.add("active");
     phase = id.replace("screen-", "");
+    applyStageTheme();
   }
 
   function escapeHtml(str) {
@@ -288,6 +289,51 @@
     const sec = s % 60;
     if (m > 0) return `${m}m ${sec}s`;
     return `${sec}s`;
+  }
+
+  // ─────────────────────────────────────────────────────────────
+  // Theme handling
+  // ─────────────────────────────────────────────────────────────
+  // Stage defaults: load/results keep the dark gradient theme,
+  // instructions/exam default to the NTA light theme. The global
+  // toggle overrides the theme for the current stage on demand;
+  // that override is remembered if the same stage is revisited,
+  // while other stages keep applying their own defaults.
+  const STAGE_DEFAULT_THEME = Object.freeze({
+    load: "dark",
+    error: "dark",
+    instructions: "light",
+    exam: "light",
+    result: "dark",
+  });
+
+  // Manual overrides chosen via the toggle: stage -> "dark" | "light"
+  const stageThemeOverrides = {};
+
+  function getTheme() {
+    return document.documentElement.getAttribute("data-theme") === "light"
+      ? "light"
+      : "dark";
+  }
+
+  function setTheme(theme) {
+    const next = theme === "light" ? "light" : "dark";
+    document.documentElement.setAttribute("data-theme", next);
+    const btn = $("#theme-toggle");
+    if (btn) {
+      btn.setAttribute("aria-pressed", next === "dark" ? "true" : "false");
+      btn.title = next === "dark" ? "Switch to Light Mode" : "Switch to Dark Mode";
+    }
+  }
+
+  function applyStageTheme() {
+    setTheme(stageThemeOverrides[phase] || STAGE_DEFAULT_THEME[phase] || "dark");
+  }
+
+  function toggleTheme() {
+    const next = getTheme() === "dark" ? "light" : "dark";
+    stageThemeOverrides[phase] = next;
+    setTheme(next);
   }
 
   // ─────────────────────────────────────────────────────────────
@@ -954,6 +1000,9 @@
   // Event Bindings
   // ─────────────────────────────────────────────────────────────
   function bindEvents() {
+    // Global Theme Toggle — switches the color theme for the current stage
+    $("#theme-toggle").addEventListener("click", toggleTheme);
+
     // Tabs on Load Screen
     $$(".import-tabs .tab").forEach((tab) => {
       tab.addEventListener("click", () => {
