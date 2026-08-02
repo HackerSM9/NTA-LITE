@@ -9,7 +9,6 @@
   // Constants
   // ─────────────────────────────────────────────────────────────
   const SCHEMA_VERSION = "1.0";
-  const STORAGE_KEY = "nta_jee_sim_v1_session";
   const MARKING = Object.freeze({ correct: 4, incorrect: -1, unattempted: 0 });
   const VALID_TYPES = Object.freeze([
     "single_correct",
@@ -389,47 +388,6 @@
   }
 
   // ─────────────────────────────────────────────────────────────
-  // Session Persistence
-  // ─────────────────────────────────────────────────────────────
-  function saveSession() {
-    if (!paper || phase === "load" || phase === "error") return;
-    try {
-      const payload = {
-        version: 1,
-        savedAt: new Date().toISOString(),
-        phase,
-        paper,
-        responses,
-        currentIndex,
-        remainingSeconds,
-        totalDurationSeconds,
-        examStartedAt,
-        examEndedAt,
-        resultData,
-      };
-      localStorage.setItem(STORAGE_KEY, JSON.stringify(payload));
-    } catch (_) {}
-  }
-
-  function loadSession() {
-    try {
-      const raw = localStorage.getItem(STORAGE_KEY);
-      if (!raw) return null;
-      const data = JSON.parse(raw);
-      if (!data || !data.paper) return null;
-      return data;
-    } catch (_) {
-      return null;
-    }
-  }
-
-  function clearSession() {
-    try {
-      localStorage.removeItem(STORAGE_KEY);
-    } catch (_) {}
-  }
-
-  // ─────────────────────────────────────────────────────────────
   // Scoring
   // ─────────────────────────────────────────────────────────────
   function gradeQuestion(q, resp) {
@@ -708,7 +666,6 @@
 
     renderSectionTabs();
     renderPalette();
-    saveSession();
   }
 
   // ─────────────────────────────────────────────────────────────
@@ -813,7 +770,6 @@
     if (!examStartedAt) examStartedAt = examEndedAt;
     resultData = computeResults();
     phase = "result";
-    saveSession();
     renderResultDashboard();
     if (!fromTimeUp) {
       $("#modal-timeup").hidden = true;
@@ -1164,7 +1120,6 @@
     // New Test / Load Another Paper Button
     $("#btn-new-test").addEventListener("click", () => {
       stopTimer();
-      clearSession();
       paper = null;
       questions = [];
       responses = {};
