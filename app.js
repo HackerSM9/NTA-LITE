@@ -1,5 +1,5 @@
 /**
- * NTA JEE Exam Simulator
+ * SM9-CBT
  * Fixed JSON schema v1.0 — Official NTA CBT Behavior & Clean Results
  */
 (function () {
