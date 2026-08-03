@@ -718,12 +718,18 @@ button {
   width: 52px;
   height: 52px;
   border-radius: 12px;
+  overflow: hidden;
   background: var(--brand-gradient);
   display: grid;
   place-items: center;
-  font-weight: 700;
-  font-size: 18px;
-  color: #fff;
+  flex: 0 0 auto;
+}
+
+.brand-mark img {
+  width: 100%;
+  height: 100%;
+  display: block;
+  object-fit: cover;
 }
 
 .load-brand h1 {
@@ -1178,16 +1184,19 @@ button {
   width: 44px;
   height: 44px;
   border-radius: 50%;
+  overflow: hidden;
   background: var(--exam-emblem-gradient);
   color: #fff;
   display: grid;
   place-items: center;
-  font-weight: 800;
-  font-size: 13px;
+  flex: 0 0 auto;
 }
 
-.emblem-text {
-  letter-spacing: 0.04em;
+.nta-emblem img {
+  width: 100%;
+  height: 100%;
+  display: block;
+  object-fit: cover;
 }
 
 .nta-gov-title {
@@ -1675,6 +1684,17 @@ button {
 
 .report-app-logo {
   color: var(--rep-logo);
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+}
+
+.report-app-logo img {
+  width: 26px;
+  height: 26px;
+  border-radius: 50%;
+  display: block;
+  object-fit: cover;
 }
 
 .report-sep {
