@@ -6,6 +6,101 @@
   "use strict";
 
   // ─────────────────────────────────────────────────────────────
+  // Anti-copy and Anti-zoom Protection
+  // ─────────────────────────────────────────────────────────────
+  
+  // Prevent context menu (right-click) - but allow in input/textarea
+  document.addEventListener('contextmenu', function(e) {
+    const target = e.target;
+    if (target.tagName !== 'INPUT' && target.tagName !== 'TEXTAREA') {
+      e.preventDefault();
+      return false;
+    }
+  });
+
+  // Prevent copy (Ctrl+C, Cmd+C) - but allow in input/textarea
+  document.addEventListener('copy', function(e) {
+    const target = document.activeElement;
+    if (target.tagName !== 'INPUT' && target.tagName !== 'TEXTAREA') {
+      e.preventDefault();
+      return false;
+    }
+  });
+
+  // Prevent cut (Ctrl+X, Cmd+X) - but allow in input/textarea
+  document.addEventListener('cut', function(e) {
+    const target = document.activeElement;
+    if (target.tagName !== 'INPUT' && target.tagName !== 'TEXTAREA') {
+      e.preventDefault();
+      return false;
+    }
+  });
+
+  // Prevent paste (Ctrl+V, Cmd+V) outside input/textarea
+  document.addEventListener('paste', function(e) {
+    const target = document.activeElement;
+    if (target.tagName !== 'INPUT' && target.tagName !== 'TEXTAREA') {
+      e.preventDefault();
+      return false;
+    }
+  });
+
+  // Prevent keyboard shortcuts for zoom and copy/paste outside inputs
+  document.addEventListener('keydown', function(e) {
+    const target = document.activeElement;
+    const isInput = target.tagName === 'INPUT' || target.tagName === 'TEXTAREA';
+    
+    // Allow all shortcuts in input/textarea fields
+    if (isInput) return;
+    
+    // Block Ctrl/Cmd + C (copy)
+    if ((e.ctrlKey || e.metaKey) && e.key === 'c') {
+      e.preventDefault();
+      return false;
+    }
+    // Block Ctrl/Cmd + X (cut)
+    if ((e.ctrlKey || e.metaKey) && e.key === 'x') {
+      e.preventDefault();
+      return false;
+    }
+    // Block Ctrl/Cmd + V (paste)
+    if ((e.ctrlKey || e.metaKey) && e.key === 'v') {
+      e.preventDefault();
+      return false;
+    }
+    // Block Ctrl/Cmd + + (zoom in)
+    if ((e.ctrlKey || e.metaKey) && (e.key === '+' || e.key === '=')) {
+      e.preventDefault();
+      return false;
+    }
+    // Block Ctrl/Cmd + - (zoom out)
+    if ((e.ctrlKey || e.metaKey) && e.key === '-') {
+      e.preventDefault();
+      return false;
+    }
+    // Block Ctrl/Cmd + 0 (reset zoom)
+    if ((e.ctrlKey || e.metaKey) && e.key === '0') {
+      e.preventDefault();
+      return false;
+    }
+  });
+
+  // Prevent touch-based zoom (pinch-to-zoom)
+  document.addEventListener('touchmove', function(e) {
+    if (e.touches.length > 1) {
+      e.preventDefault();
+    }
+  }, { passive: false });
+
+  // Prevent wheel-based zoom (Ctrl + scroll)
+  document.addEventListener('wheel', function(e) {
+    if (e.ctrlKey) {
+      e.preventDefault();
+      return false;
+    }
+  }, { passive: false });
+
+  // ─────────────────────────────────────────────────────────────
   // Constants
   // ─────────────────────────────────────────────────────────────
   const SCHEMA_VERSION = "1.0";
