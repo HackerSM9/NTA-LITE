@@ -1242,6 +1242,13 @@ button {
   border-radius: 3px 3px 0 0;
   border: 1px solid var(--exam-tab-border);
   border-bottom: none;
+  transition: background var(--transition), color var(--transition);
+}
+
+.section-tab:hover:not(.active) {
+  background: var(--exam-opt-hover);
+  color: var(--text);
+  border-color: var(--exam-tab-border);
 }
 
 .section-tab.active {
@@ -1261,6 +1268,18 @@ button {
 
 .exam-layout.collapsed {
   grid-template-columns: 1fr 0px;
+}
+
+@media (min-width: 769px) {
+  .exam-layout.collapsed .palette-pane {
+    width: 0;
+    min-width: 0;
+    padding: 0;
+    border: none;
+  }
+  .exam-layout.collapsed .palette-pane > *:not(.palette-toggle-btn) {
+    display: none !important;
+  }
 }
 
 .question-pane {
@@ -1746,6 +1765,84 @@ button {
   padding: 12px;
   border-bottom: 1px solid var(--rep-td-border);
   color: var(--rep-val);
+}
+
+.section-summary-table th:not(:first-child),
+.section-summary-table td:not(:first-child) {
+  text-align: center;
+}
+
+.section-summary-table td {
+  padding: 16px 12px;
+  vertical-align: middle;
+}
+
+/* Section Summary Table Badges */
+.badge-pill-neutral {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 4px 12px;
+  border-radius: 100px;
+  border: 1px solid var(--border);
+  background: var(--bg-2);
+  color: var(--text);
+  font-family: var(--mono);
+  font-weight: 500;
+  font-size: 13px;
+  min-width: 48px;
+  box-sizing: border-box;
+}
+
+.badge-pill-correct {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 4px 12px;
+  border-radius: 100px;
+  border: 1px solid var(--txt-green);
+  background: var(--opt-correct-bg);
+  color: var(--txt-green);
+  font-family: var(--mono);
+  font-weight: bold;
+  font-size: 13px;
+  min-width: 48px;
+  box-sizing: border-box;
+}
+
+.badge-pill-incorrect {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 4px 12px;
+  border-radius: 100px;
+  border: 1px solid var(--txt-red);
+  background: var(--opt-user-bg);
+  color: var(--txt-red);
+  font-family: var(--mono);
+  font-weight: bold;
+  font-size: 13px;
+  min-width: 48px;
+  box-sizing: border-box;
+}
+
+.sec-score-container {
+  display: inline-flex;
+  flex-direction: column;
+  align-items: center;
+  line-height: 1.2;
+}
+
+.sec-score-val {
+  font-size: 16px;
+  font-weight: 700;
+  font-family: var(--mono);
+}
+
+.sec-score-max {
+  font-size: 11px;
+  color: var(--text-mute);
+  font-family: var(--mono);
 }
 
 .report-table tbody tr:hover {
