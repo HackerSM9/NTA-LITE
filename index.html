@@ -3,442 +3,181 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>SM9 CBT</title>
-  <link rel="stylesheet" href="style.css?v=1.1.0" />
+  <title>SM9 CBT • Login</title>
+  <link rel="stylesheet" href="css/style.css" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet" />
-  <link rel="icon" type="image/x-icon" href="https://hackersm9.github.io/cbt/fav.ico">
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&amp;family=IBM+Plex+Mono:wght@400;500;600&amp;display=swap" rel="stylesheet" />
+  <link rel="icon" type="image/x-icon" href="fav.ico">
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="js/supabase-client.js"></script>
 </head>
 <body>
-  <!-- Global Theme Toggle — available on every stage.
-       Stage defaults stay intact (load/results = dark, instructions/test = light);
-       this only overrides the current stage on demand. -->
-  <button type="button" id="theme-toggle" class="theme-toggle" aria-label="Switch color theme" aria-pressed="false" title="Switch to Light Mode">
-    <svg class="tt-icon tt-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="4"/><line x1="12" y1="2" x2="12" y2="4.5"/><line x1="12" y1="19.5" x2="12" y2="22"/><line x1="4.2" y1="4.2" x2="6.1" y2="6.1"/><line x1="17.9" y1="17.9" x2="19.8" y2="19.8"/><line x1="2" y1="12" x2="4.5" y2="12"/><line x1="19.5" y1="12" x2="22" y2="12"/><line x1="4.2" y1="19.8" x2="6.1" y2="17.9"/><line x1="17.9" y1="6.1" x2="19.8" y2="4.2"/></svg>
-    <svg class="tt-icon tt-moon" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"/></svg>
-  </button>
-
-  <div id="app">
-    <!-- LOAD SCREEN -->
-    <section id="screen-load" class="screen active">
-      <div class="load-shell">
-        <header class="load-brand">
-          <div class="brand-mark">SM9</div>
-          <div>
-            <h1>CBT Exam</h1>
-            <p class="brand-sub">Computer Based Test · Fixed Schema Contract</p>
-          </div>
-        </header>
-        <div class="load-card">
-          <h2>Load Examination Paper</h2>
-          <p class="muted">Import a fixed JSON v1.0 paper. Answers stay hidden until final submission.</p>
-          <div class="import-tabs" role="tablist">
-            <button type="button" class="tab active" data-tab="paste">Paste JSON</button>
-            <button type="button" class="tab" data-tab="upload">Upload File</button>
-            <button type="button" class="tab" data-tab="sample">Sample Paper</button>
-          </div>
-          <div id="panel-paste" class="import-panel active">
-            <label class="field-label" for="json-input">JSON payload</label>
-            <textarea id="json-input" spellcheck="false" placeholder='{"schemaVersion":"1.0","appName":"JEE Simulator","exam":{...},"questions":[...]}'></textarea>
-          </div>
-          <div id="panel-upload" class="import-panel">
-            <label class="dropzone" id="dropzone" for="file-input">
-              <input type="file" id="file-input" accept=".json,application/json" hidden />
-              <span class="drop-icon">⬆</span>
-              <span class="drop-title">Drop a .json file here</span>
-              <span class="drop-sub">or click to browse</span>
-              <span id="file-name" class="file-name"></span>
-            </label>
-          </div>
-          <div id="panel-sample" class="import-panel">
-            <div class="sample-box">
-              <h3>Demo JEE Main Paper</h3>
-              <p>Loads a built-in 12-question sample covering Physics, Chemistry and Mathematics with all key question types.</p>
-              <button type="button" id="btn-load-sample" class="btn btn-secondary">Load Sample Paper</button>
-            </div>
-          </div>
-          <div id="validation-msg" class="validation-msg" hidden></div>
-          <div class="load-actions">
-            <button type="button" id="btn-validate" class="btn btn-ghost">Validate JSON</button>
-            <button type="button" id="btn-start" class="btn btn-primary">Start Examination</button>
-          </div>
-        </div>
-        <footer class="load-foot">
-          Official NTA Scoring Scheme · Correct +4 · Incorrect −1 · Unattempted 0
-        </footer>
-      </div>
-    </section>
-
-    <!-- ERROR SCREEN -->
-    <section id="screen-error" class="screen">
-      <div class="error-shell">
-        <div class="error-card">
-          <div class="error-badge">JSON VALIDATION FAILED</div>
-          <h2>Unable to start examination</h2>
-          <p class="muted">The provided file does not match the fixed schema v1.0 contract.</p>
-          <ul id="error-list" class="error-list"></ul>
-          <button type="button" id="btn-error-back" class="btn btn-primary">Back to Loader</button>
+  <div class="login-container">
+    <div class="login-card">
+      <!-- Brand Header -->
+      <div class="login-brand">
+        <div class="brand-mark">SM9</div>
+        <div>
+          <h1>CBT Platform</h1>
+          <p class="brand-sub">Secure Computer Based Testing</p>
         </div>
       </div>
-    </section>
 
-    <!-- INSTRUCTIONS SCREEN (Authentic NTA Layout) -->
-    <section id="screen-instructions" class="screen">
-      <div class="nta-instr-wrapper">
-        <header class="nta-instr-topbar">
-          <div class="nta-instr-title">GENERAL INSTRUCTIONS</div>
-        </header>
-
-        <div class="nta-instr-content">
-          <h2 class="nta-instr-heading">Please read the instructions carefully</h2>
-
-          <div class="nta-instr-section">
-            <p class="nta-bold">General Instructions:</p>
-            <ol class="nta-num-list">
-              <li>Total duration of <span id="instr-exam-title-text">JEE-Main - Paper1</span> is <span id="instr-duration-text">180</span> min.</li>
-              <li>The clock will be set at the server. The countdown timer in the top right corner of screen will display the remaining time available for you to complete the examination. When the timer reaches zero, the examination will end by itself. You will not be required to end or submit your examination.</li>
-              <li>
-                The Questions Palette displayed on the right side of screen will show the status of each question using one of the following symbols:
-                <ul class="nta-legend-list">
-                  <li><span class="nta-icon icon-not-visited">1</span> You have not visited the question yet.</li>
-                  <li><span class="nta-icon icon-not-answered">2</span> You have not answered the question.</li>
-                  <li><span class="nta-icon icon-answered">3</span> You have answered the question.</li>
-                  <li><span class="nta-icon icon-marked">4</span> You have NOT answered the question, but have marked the question for review.</li>
-                  <li><span class="nta-icon icon-answered-marked">5</span> The question(s) "Answered and Marked for Review" will be considered for evaluation.</li>
-                </ul>
-              </li>
-              <li>You can click on the "&gt;" arrow which appears to the left of question palette to collapse the question palette thereby maximizing the question window. To view the question palette again, you can click on "&lt;" which appears on the right side of question window.</li>
-              <li>You can click on your "Profile" image on top right corner of your screen to change the language during the exam for entire question paper.</li>
-              <li>You can click on <span class="blue-circle">↓</span> to navigate to the bottom and <span class="blue-circle">↑</span> to navigate to top of the question area, without scrolling.</li>
-            </ol>
-          </div>
-
-          <div class="nta-instr-section">
-            <p class="nta-bold">Navigating to a Question:</p>
-            <ol start="7" class="nta-num-list">
-              <li>To answer a question, do the following:
-                <ol type="a" class="nta-sub-list">
-                  <li>Click on the question number in the Question Palette at the right of your screen to go to that numbered question directly. Note that using this option does NOT save your answer to the current question.</li>
-                  <li>Click on <strong>Save &amp; Next</strong> to save your answer for the current question and then go to the next question.</li>
-                  <li>Click on <strong>Save &amp; Mark for Review</strong> to save your answer for the current question, mark it for review, and then go to the next question.</li>
-                  <li>Click on <strong>Mark for Review &amp; Next</strong> to mark the question for review without saving an answer, and then go to the next question.</li>
-                </ol>
-              </li>
-            </ol>
-          </div>
-
-          <div class="nta-instr-section">
-            <p class="nta-bold">Answering a Question:</p>
-            <ol start="8" class="nta-num-list">
-              <li>Procedure for answering a multiple choice / numerical type question:
-                <ol type="a" class="nta-sub-list">
-                  <li>To select your answer, click on the option radio button / type in numerical value.</li>
-                  <li>To deselect your chosen answer, click on the chosen option again or click on the <strong>Clear</strong> button.</li>
-                  <li>To change your chosen answer, click on another option button.</li>
-                  <li><strong>To save your answer, you MUST click on the Save &amp; Next button.</strong></li>
-                  <li>To mark the question for review, click on <strong>Save &amp; Mark for Review</strong> or <strong>Mark for Review &amp; Next</strong>.</li>
-                </ol>
-              </li>
-              <li>To change your answer to a question that has already been answered, first select that question for answering and then follow the procedure for answering that type of question.</li>
-            </ol>
-          </div>
-
-          <div class="nta-instr-note">
-            Please note all questions will appear in your default language. You can change language later if needed.
-          </div>
-
-          <div class="nta-declaration-box">
-            <label class="nta-check-label">
-              <input type="checkbox" id="agree-check" />
-              <span>I have read and understood the instructions. All computer hardware allotted to me is in proper working condition. I declare that I am not in possession of / not wearing / not carrying any prohibited gadget. I agree that in case of not adhering to instructions, I shall be liable to be debarred from this Test.</span>
-            </label>
-          </div>
-
-          <div class="nta-instr-footer-actions">
-            <button type="button" id="btn-instr-back" class="btn btn-ghost">BACK</button>
-            <button type="button" id="btn-begin-exam" class="btn btn-proceed" disabled>PROCEED</button>
-          </div>
-        </div>
-
-        <footer class="nta-copyright">
-         © 2026 Samarth Magdum (HackerSM9). All rights reserved.
-        </footer>
-      </div>
-    </section>
-
-    <!-- EXAM SCREEN (Authentic NTA Layout) -->
-    <section id="screen-exam" class="screen">
-      <!-- NTA Header Bar -->
-      <header class="nta-exam-topbar">
-        <div class="nta-topbar-brand">
-          <div class="nta-emblem">
-            <span class="emblem-text">SM9</span>
-          </div>
-          <div class="nta-gov-title">
-            <span class="main-txt">SM9 CBT Service</span>
-            <span class="sub-txt">Be a Perfectionist.</span>
-          </div>
-        </div>
-        <div class="nta-topbar-candidate">
-          <div class="cand-avatar-box">
-            <svg viewBox="0 0 24 24" fill="currentColor" class="cand-svg"><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></svg>
-          </div>
-          <div class="cand-details">
-            <div><span class="lbl">Candidate Name :</span> <strong id="cand-display-name">[Your Name]</strong></div>
-            <div><span class="lbl">Exam Name :</span> <span id="exam-display-name">JEE-Main</span></div>
-            <div><span class="lbl">Subject Name :</span> <span id="exam-subject-display">3001_JEE MAIN DEMO</span></div>
-            <div><span class="lbl">Remaining Time :</span> <span id="timer-value" class="nta-timer-badge">03:00:00</span></div>
-          </div>
-        </div>
-      </header>
-
-      <!-- Section Tabs Bar -->
-      <div class="nta-section-bar">
-        <div class="sec-label-txt">Sections:</div>
-        <div class="section-tabs" id="section-tabs"></div>
+      <div class="login-header">
+        <h2>Welcome Back</h2>
+        <p>Sign in to access your tests and dashboard</p>
       </div>
 
-      <!-- Main Layout Pane -->
-      <div class="exam-layout" id="exam-layout-container">
-        <!-- Question Content Pane -->
-        <main class="question-pane">
-          <div class="q-header">
-            <div class="q-header-left">
-              <span class="q-num" id="q-num">Question 1</span>
-              <span class="q-type-badge" id="q-type-badge">Single Correct</span>
-              <span class="q-section-badge" id="q-section-badge">PHYSICS</span>
-            </div>
-            <div class="q-marks">
-              Marks for correct answer <span class="pos">+4</span> | Negative mark <span class="neg">−1</span>
-            </div>
-          </div>
-
-          <div class="q-stem-wrapper">
-            <div class="q-stem" id="q-stem"></div>
-            <div id="assertion-block" class="assertion-block" hidden>
-              <div class="ar-box">
-                <div class="ar-label">Assertion (A)</div>
-                <div id="ar-assertion" class="ar-text"></div>
-              </div>
-              <div class="ar-box">
-                <div class="ar-label">Reason (R)</div>
-                <div id="ar-reason" class="ar-text"></div>
-              </div>
-            </div>
-
-            <!-- Options Area -->
-            <div class="options-area" id="options-area"></div>
-
-            <!-- Numerical Area -->
-            <div id="numerical-area" class="numerical-area" hidden>
-              <label class="field-label" for="num-input">Enter Answer / Numerical Value:</label>
-              <input type="text" id="num-input" class="num-input" inputmode="decimal" autocomplete="off" placeholder="Type answer..." />
-              <p class="muted tiny">Answer will be saved ONLY when you click SAVE &amp; NEXT or SAVE &amp; MARK FOR REVIEW.</p>
-            </div>
-          </div>
-
-          <!-- Bottom Action Buttons bar (Matches exact NTA layout) -->
-          <div class="nta-bottom-actions">
-            <div class="actions-left">
-              <button type="button" id="btn-save-next" class="btn btn-nta-save">SAVE &amp; NEXT</button>
-              <button type="button" id="btn-clear" class="btn btn-nta-clear">CLEAR</button>
-              <button type="button" id="btn-save-mark" class="btn btn-nta-save-mark">SAVE &amp; MARK FOR REVIEW</button>
-              <button type="button" id="btn-mark-next" class="btn btn-nta-mark-next">MARK FOR REVIEW &amp; NEXT</button>
-            </div>
-            <div class="actions-right">
-              <button type="button" id="btn-prev" class="btn btn-nta-nav">&lt;&lt; BACK</button>
-              <button type="button" id="btn-next" class="btn btn-nta-nav">NEXT &gt;&gt;</button>
-              <button type="button" id="btn-submit-exam" class="btn btn-nta-submit">SUBMIT</button>
-            </div>
-          </div>
-        </main>
-
-        <!-- Question Palette Pane -->
-        <aside class="palette-pane" id="palette-pane">
-          <button type="button" id="btn-toggle-palette" class="palette-toggle-btn" title="Toggle Palette">&gt;</button>
-          
-          <div class="palette-legend-box">
-            <div class="legend-row">
-              <div class="leg-item"><span class="nta-icon icon-not-visited" id="leg-not-visited">0</span> Not Visited</div>
-              <div class="leg-item"><span class="nta-icon icon-not-answered" id="leg-not-answered">0</span> Not Answered</div>
-            </div>
-            <div class="legend-row">
-              <div class="leg-item"><span class="nta-icon icon-answered" id="leg-answered">0</span> Answered</div>
-              <div class="leg-item"><span class="nta-icon icon-marked" id="leg-marked">0</span> Marked for Review</div>
-            </div>
-            <div class="legend-row full">
-              <div class="leg-item"><span class="nta-icon icon-answered-marked" id="leg-answered-marked">0</span> Answered &amp; Marked for Review (will be considered for evaluation)</div>
-            </div>
-          </div>
-
-          <div id="palette-sections" class="palette-sections"></div>
-        </aside>
-      </div>
-    </section>
-
-    <!-- SUBMIT CONFIRM MODAL -->
-    <div id="modal-submit" class="modal" hidden>
-      <div class="modal-backdrop" data-close="submit"></div>
-      <div class="modal-card" role="dialog" aria-modal="true" aria-labelledby="submit-title">
-        <h2 id="submit-title">Submit Examination?</h2>
-        <p class="muted">Are you sure you want to submit the exam? Once submitted, you cannot modify your responses.</p>
-        <div id="submit-summary" class="submit-summary"></div>
-        <div class="modal-actions">
-          <button type="button" id="btn-cancel-submit" class="btn btn-ghost">Resume Exam</button>
-          <button type="button" id="btn-confirm-submit" class="btn btn-submit">Yes, Submit Final Test</button>
+      <!-- Login Form -->
+      <form id="login-form" class="login-form">
+        <div class="form-group">
+          <label for="email">Email Address</label>
+          <input 
+            type="email" 
+            id="email" 
+            placeholder="you@example.com" 
+            required 
+            autocomplete="username"
+          />
         </div>
+
+        <div class="form-group">
+          <label for="password">Password</label>
+          <input 
+            type="password" 
+            id="password" 
+            placeholder="••••••••" 
+            required 
+            autocomplete="current-password"
+          />
+        </div>
+
+        <div id="login-error" class="error-msg" hidden></div>
+
+        <button type="submit" class="btn btn-primary btn-block" id="login-btn">
+          <span id="login-text">Sign In</span>
+          <span id="login-spinner" class="spinner" hidden></span>
+        </button>
+      </form>
+
+      <div class="login-footer">
+        <p class="muted">Only authorized users can access this platform.</p>
+        <p class="tiny">Contact your administrator for access.</p>
       </div>
     </div>
 
-    <!-- TIME UP MODAL -->
-    <div id="modal-timeup" class="modal" hidden>
-      <div class="modal-backdrop"></div>
-      <div class="modal-card" role="dialog" aria-modal="true">
-        <h2>Time Over!</h2>
-        <p class="muted">The allotted examination time has expired. Your saved responses are being automatically submitted.</p>
-        <div class="modal-actions">
-          <button type="button" id="btn-timeup-ok" class="btn btn-primary">View Test Report</button>
-        </div>
-      </div>
-    </div>
-
-    <!-- RESULT REPORT SCREEN (Clean List & Subject-wise Dashboard) -->
-    <section id="screen-result" class="screen">
-      <div class="report-app-shell">
-        <header class="report-top-nav">
-          <div class="nav-left-brand">
-            <span class="report-app-logo">Tests</span>
-            <span class="report-sep">&gt;</span>
-            <span id="report-exam-title-head" class="report-exam-head">JEE MAIN TEST_DEMO</span>
-          </div>
-          <div class="nav-right-actions">
-            <button type="button" id="btn-new-test" class="btn btn-ghost btn-sm">Load Another Paper</button>
-          </div>
-        </header>
-
-        <div class="report-body-container">
-          <!-- Card 1: Test Summary -->
-          <div class="report-card">
-            <div class="card-head-title"><span class="card-icon">📅</span> Test Summary</div>
-            <div class="card-table-rows">
-              <div class="card-row"><span class="lbl">📅 Date</span><span class="val" id="r-stat-date">—</span></div>
-              <div class="card-row"><span class="lbl">🕒 Result Timings</span><span class="val" id="r-stat-time">—</span></div>
-              <div class="card-row"><span class="lbl">⏱ Duration</span><span class="val" id="r-stat-duration">—</span></div>
-              <div class="card-row"><span class="lbl">⌛ Time taken</span><span class="val" id="r-stat-timetaken">—</span></div>
-              <div class="card-row"><span class="lbl">⚡ Mode</span><span class="val"><span class="badge-online">online</span></span></div>
-            </div>
-          </div>
-
-          <!-- Card 2: Test Results -->
-          <div class="report-card">
-            <div class="card-head-title"><span class="card-icon">📊</span> Test Results</div>
-            <div class="card-table-rows">
-              <div class="card-row"><span class="lbl"><span class="row-icon blue">🎯</span> Total Marks</span><strong class="val score-highlight" id="r-res-score">0/300</strong></div>
-              <div class="card-row"><span class="lbl"><span class="row-icon green">✓</span> Correct Question</span><span class="val txt-green" id="r-res-correct">0</span></div>
-              <div class="card-row"><span class="lbl"><span class="row-icon red">✗</span> Incorrect Question</span><span class="val txt-red" id="r-res-incorrect">0</span></div>
-              <div class="card-row"><span class="lbl"><span class="row-icon orange">⏭</span> Skipped Question</span><span class="val txt-orange" id="r-res-skipped">0</span></div>
-              <div class="card-row"><span class="lbl"><span class="row-icon purple">🎯</span> Accuracy</span><strong class="val" id="r-res-accuracy">0%</strong></div>
-            </div>
-          </div>
-
-          <!-- Card 3: Section Summary -->
-          <div class="report-card">
-            <div class="card-head-title"><span class="card-icon">📄</span> Section Summary</div>
-            <div class="table-responsive">
-              <table class="report-table">
-                <thead>
-                  <tr>
-                    <th>Section</th>
-                    <th>Total Question</th>
-                    <th>Time Taken</th>
-                    <th>Correct Question</th>
-                    <th>Incorrect Question</th>
-                    <th>Skipped Question</th>
-                    <th>Score</th>
-                  </tr>
-                </thead>
-                <tbody id="r-sec-tbody">
-                  <!-- Section summary rows rendered dynamically -->
-                </tbody>
-              </table>
-            </div>
-          </div>
-
-          <!-- Card 4: Detailed Answer Key List -->
-          <div class="report-card">
-            <div class="card-head-title"><span class="card-icon">📜</span> Answer Key</div>
-            
-            <div class="answer-key-tabs" id="answer-key-subject-tabs">
-              <!-- Subject tabs dynamically rendered -->
-            </div>
-
-            <div class="table-responsive">
-              <table class="report-table answer-key-table">
-                <thead>
-                  <tr>
-                    <th>Q. No</th>
-                    <th>Q. Type</th>
-                    <th>Score Answer</th>
-                    <th>Correct</th>
-                    <th>Your Answer/Time Taken</th>
-                    <th>Details</th>
-                  </tr>
-                </thead>
-                <tbody id="r-answerkey-tbody">
-                  <!-- Answer key rows rendered dynamically -->
-                </tbody>
-              </table>
-            </div>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <!-- QUESTION DETAIL MODAL (For Answer Key View) -->
-    <div id="modal-q-detail" class="modal" hidden>
-      <div class="modal-backdrop" id="modal-q-backdrop"></div>
-      <div class="modal-card q-detail-modal" role="dialog" aria-modal="true">
-        <header class="q-detail-head">
-          <div>
-            <h3 id="qd-qnum">Question Details</h3>
-            <span id="qd-subject" class="badge-subj">PHYSICS</span>
-            <span id="qd-type" class="badge-type">SINGLE CHOICE</span>
-          </div>
-          <button type="button" id="btn-close-qd" class="btn-close">&times;</button>
-        </header>
-
-        <div class="q-detail-body">
-          <div class="qd-stem-box" id="qd-stem"></div>
-          <div id="qd-assertion-block" class="assertion-block" hidden>
-            <div class="ar-box">
-              <div class="ar-label">Assertion (A)</div>
-              <div id="qd-ar-assertion" class="ar-text"></div>
-            </div>
-            <div class="ar-box">
-              <div class="ar-label">Reason (R)</div>
-              <div id="qd-ar-reason" class="ar-text"></div>
-            </div>
-          </div>
-
-          <div id="qd-options" class="options-area"></div>
-          <div id="qd-numerical" class="numerical-area review-num" hidden></div>
-
-          <div class="qd-meta-summary">
-            <div class="pair"><span class="lbl">Your Response:</span> <strong id="qd-user-ans">—</strong></div>
-            <div class="pair"><span class="lbl">Correct Answer:</span> <strong id="qd-correct-ans" class="txt-green">—</strong></div>
-            <div class="pair"><span class="lbl">Score Awarded:</span> <strong id="qd-score">—</strong></div>
-          </div>
-
-          <div class="explanation-box" id="qd-explanation-box">
-            <div class="exp-label">Explanation &amp; Solution</div>
-            <div id="qd-explanation-text"></div>
-          </div>
-        </div>
+    <div class="login-security-note">
+      <div class="security-badge">
+        🔒 Single Device Login Enforced
       </div>
     </div>
   </div>
 
-  <script src="app.js?v=1.1.1"></script>
+  <script>
+    // Login Page Logic
+    (function() {
+      const form = document.getElementById("login-form");
+      const errorEl = document.getElementById("login-error");
+      const btn = document.getElementById("login-btn");
+      const btnText = document.getElementById("login-text");
+      const spinner = document.getElementById("login-spinner");
+
+      function showError(msg) {
+        errorEl.textContent = msg;
+        errorEl.hidden = false;
+      }
+
+      function hideError() {
+        errorEl.hidden = true;
+      }
+
+      function setLoading(isLoading) {
+        btn.disabled = isLoading;
+        if (isLoading) {
+          btnText.textContent = "Signing in...";
+          spinner.hidden = false;
+        } else {
+          btnText.textContent = "Sign In";
+          spinner.hidden = true;
+        }
+      }
+
+      form.addEventListener("submit", async (e) => {
+        e.preventDefault();
+        hideError();
+        setLoading(true);
+
+        const email = document.getElementById("email").value.trim();
+        const password = document.getElementById("password").value;
+
+        const supabase = window.SM9Supabase.getClient();
+
+        try {
+          // 1. Sign in with Supabase
+          const { data: authData, error: authError } = await supabase.auth.signInWithPassword({
+            email,
+            password
+          });
+
+          if (authError) {
+            throw new Error(authError.message || "Invalid credentials");
+          }
+
+          const userId = authData.user.id;
+
+          // 2. Fetch profile
+          const { data: profile, error: profileError } = await supabase
+            .from("profiles")
+            .select("id, role, active_device_token, full_name")
+            .eq("id", userId)
+            .single();
+
+          if (profileError || !profile) {
+            throw new Error("Your account is not yet activated. Please contact admin.");
+          }
+
+          // 3. Generate new device token (single device enforcement)
+          const newDeviceToken = crypto.randomUUID();
+
+          // 4. Update profile with new device token
+          const { error: updateError } = await supabase
+            .from("profiles")
+            .update({
+              active_device_token: newDeviceToken,
+              last_login_at: new Date().toISOString()
+            })
+            .eq("id", userId);
+
+          if (updateError) {
+            console.warn("Could not update device token:", updateError);
+          }
+
+          // 5. Store device token locally (critical for auth-guard)
+          localStorage.setItem("sm9_device_token", newDeviceToken);
+          localStorage.setItem("sm9_user", JSON.stringify({
+            id: profile.id,
+            full_name: profile.full_name,
+            role: profile.role
+          }));
+
+          // 6. Redirect based on role
+          if (profile.role === "admin") {
+            window.location.href = "admin.html";
+          } else {
+            window.location.href = "dashboard.html";
+          }
+
+        } catch (err) {
+          console.error("Login failed:", err);
+          showError(err.message || "Login failed. Please check your credentials.");
+          setLoading(false);
+        }
+      });
+
+      // Auto-focus email field
+      document.getElementById("email").focus();
+    })();
+  </script>
 </body>
 </html>

@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>SM9 CBT • Dashboard</title>
+  <link rel="stylesheet" href="css/style.css" />
+  <link rel="stylesheet" href="css/dashboard.css" />
+  <link rel="icon" type="image/x-icon" href="fav.ico">
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="js/supabase-client.js"></script>
+  <script src="js/auth-guard.js"></script>
+</head>
+<body>
+  <!-- Top Navigation -->
+  <nav class="top-nav">
+    <div class="nav-left">
+      <div class="brand">
+        <span class="brand-mark">SM9</span>
+        <span class="brand-text">CBT Platform</span>
+      </div>
+    </div>
+    
+    <div class="nav-right">
+      <div class="user-info">
+        <span id="user-name">Loading...</span>
+        <span class="role-badge" id="user-role">user</span>
+      </div>
+      <button id="logout-btn" class="btn btn-ghost">Logout</button>
+    </div>
+  </nav>
+
+  <div class="dashboard-container">
+    <!-- Welcome Header -->
+    <div class="welcome-header">
+      <h1>Welcome back, <span id="welcome-name">User</span>!</h1>
+      <p>Ready to take your next test or review your performance?</p>
+    </div>
+
+    <!-- Quick Stats -->
+    <div class="stats-grid">
+      <div class="stat-card">
+        <div class="stat-icon">📊</div>
+        <div>
+          <div class="stat-value" id="total-tests">0</div>
+          <div class="stat-label">Tests Taken</div>
+        </div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-icon">🎯</div>
+        <div>
+          <div class="stat-value" id="avg-score">—</div>
+          <div class="stat-label">Average Score</div>
+        </div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-icon">⏱</div>
+        <div>
+          <div class="stat-value" id="last-test">—</div>
+          <div class="stat-label">Last Test</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Quick Actions -->
+    <div class="section">
+      <h2 class="section-title">Quick Actions</h2>
+      <div class="action-grid">
+        <a href="exam.html" class="action-card primary">
+          <div class="action-icon">🚀</div>
+          <div>
+            <div class="action-title">Start New Test</div>
+            <div class="action-desc">Load a paper and begin examination</div>
+          </div>
+        </a>
+        
+        <a href="history.html" class="action-card">
+          <div class="action-icon">📜</div>
+          <div>
+            <div class="action-title">View History</div>
+            <div class="action-desc">See all your past attempts</div>
+          </div>
+        </a>
+        
+        <a href="insights.html" class="action-card">
+          <div class="action-icon">📈</div>
+          <div>
+            <div class="action-title">Performance Insights</div>
+            <div class="action-desc">Analyze your progress</div>
+          </div>
+        </a>
+      </div>
+    </div>
+
+    <!-- Recent Tests -->
+    <div class="section">
+      <div class="section-header">
+        <h2 class="section-title">Recent Tests</h2>
+        <a href="history.html" class="btn btn-sm btn-ghost">View All</a>
+      </div>
+      
+      <div id="recent-tests" class="recent-list">
+        <!-- Populated via JavaScript -->
+        <div class="empty-state">No tests taken yet.</div>
+      </div>
+    </div>
+  </div>
+
+  <script src="js/dashboard.js"></script>
+</body>
+</html>
