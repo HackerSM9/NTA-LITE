@@ -152,11 +152,6 @@
   --exam-leg-text: #cfc4e6;
   --exam-pal-title: #a99fd0;
 
-  /* Assertion–Reason boxes */
-  --ar-box-bg: #17102d;
-  --ar-box-border: #3b2b63;
-  --ar-label: #a99fd0;
-
   /* Report / results dashboard */
   --rep-nav-bg: #1a1132;
   --rep-nav-border: #32255a;
@@ -323,11 +318,6 @@
   --exam-legend-border: #cbd5e0;
   --exam-leg-text: #4a5568;
   --exam-pal-title: #718096;
-
-  /* Assertion–Reason boxes */
-  --ar-box-bg: #f8fafc;
-  --ar-box-border: #cbd5e0;
-  --ar-label: #64748b;
 
   /* Report / results dashboard */
   --rep-nav-bg: #ffffff;
@@ -1333,36 +1323,6 @@ button {
   line-height: 1.6;
   color: var(--exam-stem);
   margin-bottom: 18px;
-  white-space: pre-wrap;
-}
-
-/* Assertion–Reason block */
-.assertion-block {
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-  margin-bottom: 18px;
-}
-
-.ar-box {
-  background: var(--ar-box-bg);
-  border: 1px solid var(--ar-box-border);
-  border-radius: 6px;
-  padding: 10px 14px;
-}
-
-.ar-label {
-  font-size: 11px;
-  font-weight: 700;
-  text-transform: uppercase;
-  letter-spacing: 0.05em;
-  color: var(--ar-label);
-  margin-bottom: 4px;
-}
-
-.ar-text {
-  line-height: 1.55;
-  color: var(--exam-stem);
   white-space: pre-wrap;
 }
 

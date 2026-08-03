@@ -306,6 +306,14 @@
     if (!isPlainObject(data.exam)) errors.push("exam must be an object.");
     if (!Array.isArray(data.questions) || data.questions.length === 0) {
       errors.push("questions must be a non-empty array.");
+    } else {
+      data.questions.forEach((question, index) => {
+        if (!isPlainObject(question)) {
+          errors.push(`questions[${index}] must be an object.`);
+        } else if (!VALID_TYPES.includes(question.type)) {
+          errors.push(`questions[${index}].type is not supported.`);
+        }
+      });
     }
     return { ok: errors.length === 0, errors, data: errors.length === 0 ? data : null };
   }
@@ -625,8 +633,6 @@
     $("#q-section-badge").textContent = q.section;
     $("#q-stem").textContent = q.stem || "";
 
-    $("#assertion-block").hidden = true;
-
     const optArea = $("#options-area");
     const numArea = $("#numerical-area");
 
@@ -872,15 +878,6 @@
     $("#qd-subject").textContent = q.section;
     $("#qd-type").textContent = TYPE_LABELS[q.type] || q.type;
     $("#qd-stem").textContent = q.stem || "";
-
-    const arBlock = $("#qd-assertion-block");
-    if (q.type === "assertion_reason") {
-      arBlock.hidden = false;
-      $("#qd-ar-assertion").textContent = q.assertion || "";
-      $("#qd-ar-reason").textContent = q.reason || "";
-    } else {
-      arBlock.hidden = true;
-    }
 
     const optArea = $("#qd-options");
     const numArea = $("#qd-numerical");
