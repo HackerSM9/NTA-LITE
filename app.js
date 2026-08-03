@@ -28,7 +28,7 @@
   // ─────────────────────────────────────────────────────────────
   const SAMPLE_PAPER = {
     schemaVersion: "1.0",
-    appName: "JEE Simulator",
+    appName: "SM9 CBT",
     exam: {
       examId: "4050367_B PLANNING 6TH JAN 2020 Shift 2 Set 2",
       examTitle: "JEE Main Demo Examination",
