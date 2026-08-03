@@ -717,9 +717,9 @@ button {
 .brand-mark {
   width: 52px;
   height: 52px;
-  border-radius: 12px;
+  border-radius: 50%;
   overflow: hidden;
-  background: var(--brand-gradient);
+  background: none;
   display: grid;
   place-items: center;
   flex: 0 0 auto;
