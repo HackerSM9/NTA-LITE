@@ -209,6 +209,8 @@
     const el = document.getElementById(id);
     if (el) el.classList.add("active");
     phase = id.replace("screen-", "");
+    // Every stage starts at the top — never land mid-scroll (e.g. on results).
+    window.scrollTo(0, 0);
     applyStageTheme();
   }
 

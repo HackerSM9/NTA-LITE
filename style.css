@@ -392,8 +392,21 @@ html {
   background-color: var(--bg-0);
 }
 
+/* The page gradient is painted ONCE on a fixed compositor layer instead of
+   using `background-attachment: fixed`, which forces low-end phones to
+   re-rasterize the full-screen multi-layer gradient on every scroll frame
+   (the #1 cause of result-screen scroll jank). Content scrolls above this
+   layer; the browser just composites, no repaint. */
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  background: var(--page-gradient);
+  pointer-events: none;
+}
+
 body {
-  background: var(--page-gradient) fixed;
   background-color: var(--bg-0);
   transition: color 0.3s ease;
 }
@@ -407,6 +420,7 @@ button {
   cursor: pointer;
   border: none;
   background: none;
+  touch-action: manipulation; /* kill 300ms tap delay & double-tap zoom on old mobile */
 }
 
 :focus-visible {
@@ -581,6 +595,8 @@ button {
 
 .q-detail-body {
   overflow-y: auto;
+  -webkit-overflow-scrolling: touch; /* native momentum scroll on iOS */
+  overscroll-behavior: contain;      /* stop scroll chaining to the page behind the modal */
   padding-top: 14px;
   display: flex;
   flex-direction: column;
@@ -1362,6 +1378,7 @@ button {
   border-radius: 4px;
   background: var(--exam-opt-bg);
   cursor: pointer;
+  touch-action: manipulation; /* kill 300ms tap delay & double-tap zoom on old mobile */
   transition: all var(--transition);
   color: var(--exam-opt-text);
 }
@@ -1577,6 +1594,8 @@ button {
 .palette-sections {
   flex: 1;
   overflow-y: auto;
+  -webkit-overflow-scrolling: touch; /* native momentum scroll on iOS */
+  overscroll-behavior: contain;      /* stop scroll chaining to the page */
 }
 
 .palette-section-title {
@@ -1602,7 +1621,7 @@ button {
 /* ---------- Report & Results Screen ---------- */
 .report-app-shell {
   min-height: 100vh;
-  background: var(--page-gradient) fixed;
+  background: transparent; /* gradient comes from the fixed body::before layer */
   color: var(--rep-lbl);
 }
 
@@ -1659,6 +1678,7 @@ button {
   border-radius: 10px;
   padding: 18px 20px;
   box-shadow: var(--shadow);
+  will-change: transform; /* promote cards to their own layer: shadow+content composite on scroll, no repaint */
 }
 
 .card-head-title {
@@ -1744,6 +1764,8 @@ button {
 /* Tables */
 .table-responsive {
   overflow-x: auto;
+  -webkit-overflow-scrolling: touch; /* native momentum scroll on iOS */
+  overscroll-behavior-x: contain;    /* stop horizontal scroll chaining to the page */
 }
 
 .report-table {
