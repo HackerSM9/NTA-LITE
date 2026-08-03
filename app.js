@@ -209,6 +209,8 @@
     const el = document.getElementById(id);
     if (el) el.classList.add("active");
     phase = id.replace("screen-", "");
+    // Every stage starts at the top — never land mid-scroll (e.g. on results).
+    window.scrollTo(0, 0);
     applyStageTheme();
   }
 
@@ -979,16 +981,28 @@
       reader.readAsText(file);
     });
 
-    // Load Sample Paper Button
+    // Load Sample Paper Button — starts the built-in demo paper directly,
+    // exactly like Start Examination. The sample JSON is never written into
+    // the paste editor, so the paper structure/answers are not exposed.
     $("#btn-load-sample").addEventListener("click", () => {
-      const text = JSON.stringify(SAMPLE_PAPER, null, 2);
-      $("#json-input").value = text;
-      pendingJsonText = text;
-      $("#validation-msg").hidden = false;
-      $("#validation-msg").className = "validation-msg ok";
-      $("#validation-msg").textContent = "Sample paper loaded! Click Start Examination.";
-      $$(".import-tabs .tab").forEach((t) => t.classList.toggle("active", t.dataset.tab === "paste"));
-      $$(".import-panel").forEach((p) => p.classList.toggle("active", p.id === "panel-paste"));
+      const result = validatePaper(SAMPLE_PAPER);
+      if (!result.ok) {
+        const msg = $("#validation-msg");
+        msg.hidden = false;
+        msg.className = "validation-msg err";
+        msg.textContent = `Sample paper error: ${result.errors[0]}`;
+        return;
+      }
+      // Clear any previously pasted/uploaded JSON so the sample starts fresh.
+      $("#json-input").value = "";
+      pendingJsonText = "";
+      $("#validation-msg").hidden = true;
+      preparePaper(result.data);
+      $("#instr-exam-title-text").textContent = result.data.exam.examTitle;
+      $("#instr-duration-text").textContent = result.data.exam.durationMinutes || 180;
+      $("#agree-check").checked = false;
+      $("#btn-begin-exam").disabled = true;
+      showScreen("screen-instructions");
     });
 
     // Validate JSON Button
