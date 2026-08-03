@@ -14,7 +14,6 @@
     "single_correct",
     "multiple_correct",
     "integer_numerical",
-    "assertion_reason",
   ]);
   const VALID_PATTERNS = Object.freeze(["JEE_MAIN", "JEE_ADVANCED", "CUSTOM"]);
 
@@ -22,7 +21,6 @@
     single_correct: "SINGLE CHOICE",
     multiple_correct: "MULTIPLE CHOICE",
     integer_numerical: "INTEGER ANSWER",
-    assertion_reason: "ASSERTION REASON",
   };
 
   // ─────────────────────────────────────────────────────────────
@@ -30,7 +28,7 @@
   // ─────────────────────────────────────────────────────────────
   const SAMPLE_PAPER = {
     schemaVersion: "1.0",
-    appName: "JEE Simulator",
+    appName: "SM9 CBT",
     exam: {
       examId: "4050367_B PLANNING 6TH JAN 2020 Shift 2 Set 2",
       examTitle: "JEE Main Demo Examination",
@@ -84,29 +82,12 @@
         explanation: "Force = [MLT⁻²] ⇒ a=1, b=1, c=−2 ⇒ 1+1+2 = 4.",
         marks: { correct: 4, incorrect: -1 },
       },
-      {
-        id: "P4",
-        section: "PHYSICS",
-        type: "assertion_reason",
-        number: 4,
-        stem: "Choose the correct option regarding Assertion (A) and Reason (R).",
-        assertion: "The acceleration due to gravity decreases with altitude.",
-        reason: "Gravitational force is inversely proportional to the square of the distance from the centre of the Earth.",
-        options: [
-          { key: "A", text: "Both A and R are true, and R is the correct explanation of A." },
-          { key: "B", text: "Both A and R are true, but R is not the correct explanation of A." },
-          { key: "C", text: "A is true, but R is false." },
-          { key: "D", text: "A is false, but R is true." },
-        ],
-        answer: { correctKeys: ["A"] },
-        explanation: "g' = GM/(R+h)². R correctly explains A.",
-        marks: { correct: 4, incorrect: -1 },
-      },
+
       {
         id: "C1",
         section: "CHEMISTRY",
         type: "single_correct",
-        number: 5,
+        number: 4,
         stem: "The oxidation number of Cr in K₂Cr₂O₇ is:",
         options: [
           { key: "A", text: "+3" },
@@ -122,7 +103,7 @@
         id: "C2",
         section: "CHEMISTRY",
         type: "multiple_correct",
-        number: 6,
+        number: 5,
         stem: "Which of the following are colligative properties?",
         options: [
           { key: "A", text: "Relative lowering of vapour pressure" },
@@ -138,36 +119,19 @@
         id: "C3",
         section: "CHEMISTRY",
         type: "integer_numerical",
-        number: 7,
+        number: 6,
         stem: "The number of moles of oxygen atoms in 88 g of CO₂ is: (Atomic mass C=12, O=16)",
         options: [],
         answer: { value: 4, tolerance: 0 },
         explanation: "88g / 44g/mol = 2 moles CO₂ ⇒ 4 moles O atoms.",
         marks: { correct: 4, incorrect: -1 },
       },
-      {
-        id: "C4",
-        section: "CHEMISTRY",
-        type: "assertion_reason",
-        number: 8,
-        stem: "Choose the correct option regarding Assertion (A) and Reason (R).",
-        assertion: "Ionisation enthalpy of nitrogen is greater than that of oxygen.",
-        reason: "Nitrogen has a half-filled p-orbital configuration which is more stable.",
-        options: [
-          { key: "A", text: "Both A and R are true, and R is the correct explanation of A." },
-          { key: "B", text: "Both A and R are true, but R is not the correct explanation of A." },
-          { key: "C", text: "A is true, but R is false." },
-          { key: "D", text: "A is false, but R is true." },
-        ],
-        answer: { correctKeys: ["A"] },
-        explanation: "N (2p³) half-filled is more stable than O (2p⁴).",
-        marks: { correct: 4, incorrect: -1 },
-      },
+
       {
         id: "M1",
         section: "MATHEMATICS",
         type: "single_correct",
-        number: 9,
+        number: 7,
         stem: "If A = {1, 2, 3} and B = {2, 3, 4}, then n(A ∪ B) equals:",
         options: [
           { key: "A", text: "3" },
@@ -183,7 +147,7 @@
         id: "M2",
         section: "MATHEMATICS",
         type: "multiple_correct",
-        number: 10,
+        number: 8,
         stem: "Which of the following numbers are prime?",
         options: [
           { key: "A", text: "17" },
@@ -199,31 +163,14 @@
         id: "M3",
         section: "MATHEMATICS",
         type: "integer_numerical",
-        number: 11,
+        number: 9,
         stem: "The value of ∫₀¹ 2x dx is:",
         options: [],
         answer: { value: 1, tolerance: 0 },
         explanation: "∫₀¹ 2x dx = [x²]₀¹ = 1.",
         marks: { correct: 4, incorrect: -1 },
       },
-      {
-        id: "M4",
-        section: "MATHEMATICS",
-        type: "assertion_reason",
-        number: 12,
-        stem: "Choose the correct option regarding Assertion (A) and Reason (R).",
-        assertion: "The function f(x) = x³ is strictly increasing on ℝ.",
-        reason: "f'(x) = 3x² ≥ 0 for all x ∈ ℝ and f'(x) = 0 only at x = 0.",
-        options: [
-          { key: "A", text: "Both A and R are true, and R is the correct explanation of A." },
-          { key: "B", text: "Both A and R are true, but R is not the correct explanation of A." },
-          { key: "C", text: "A is true, but R is false." },
-          { key: "D", text: "A is false, but R is true." },
-        ],
-        answer: { correctKeys: ["A"] },
-        explanation: "f'(x)=3x²≥0 and vanishes only at an isolated point x=0.",
-        marks: { correct: 4, incorrect: -1 },
-      },
+
     ],
   };
 
@@ -678,14 +625,7 @@
     $("#q-section-badge").textContent = q.section;
     $("#q-stem").textContent = q.stem || "";
 
-    const arBlock = $("#assertion-block");
-    if (q.type === "assertion_reason") {
-      arBlock.hidden = false;
-      $("#ar-assertion").textContent = q.assertion || "";
-      $("#ar-reason").textContent = q.reason || "";
-    } else {
-      arBlock.hidden = true;
-    }
+    $("#assertion-block").hidden = true;
 
     const optArea = $("#options-area");
     const numArea = $("#numerical-area");
