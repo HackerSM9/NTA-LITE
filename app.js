@@ -798,14 +798,27 @@
       .filter((s) => resultData.bySection[s])
       .map((s) => {
         const sec = resultData.bySection[s];
+        const displaySection = s.split(/[\s_]+/)
+          .map(word => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase())
+          .join(" ");
+
+        let scoreClass = "";
+        if (sec.score > 0) scoreClass = "txt-green";
+        else if (sec.score < 0) scoreClass = "txt-red";
+
         return `<tr>
-          <td><strong>${escapeHtml(s)}</strong></td>
-          <td>${sec.total}</td>
-          <td>${formatSecsToMinSec(sec.timeSpentSec)}</td>
-          <td class="txt-green">${sec.correct}</td>
-          <td class="txt-red">${sec.incorrect}</td>
-          <td class="txt-orange">${sec.unattempted}</td>
-          <td><strong>${sec.score}</strong> / ${sec.max}</td>
+          <td><strong>${escapeHtml(displaySection)}</strong></td>
+          <td><span class="badge-pill-neutral">${sec.total}</span></td>
+          <td><span class="badge-pill-neutral">${formatSecsToMinSec(sec.timeSpentSec)}</span></td>
+          <td><span class="badge-pill-correct">${sec.correct}</span></td>
+          <td><span class="badge-pill-incorrect">${sec.incorrect}</span></td>
+          <td><span class="badge-pill-neutral">${sec.unattempted}</span></td>
+          <td>
+            <div class="sec-score-container">
+              <div class="sec-score-val ${scoreClass}">${sec.score}</div>
+              <div class="sec-score-max">/ ${sec.max}</div>
+            </div>
+          </td>
         </tr>`;
       })
       .join("");
@@ -1055,6 +1068,19 @@
     
     $("#btn-prev").addEventListener("click", () => commitAndNavigate({ saveAnswer: false, moveDir: -1 }));
     $("#btn-next").addEventListener("click", () => commitAndNavigate({ saveAnswer: false, moveDir: 1 }));
+
+    // Section Tabs Navigation
+    $("#section-tabs").addEventListener("click", (e) => {
+      const tab = e.target.closest(".section-tab");
+      if (!tab) return;
+      const sec = tab.dataset.section;
+      if (sec) {
+        const targetIndex = questions.findIndex((q) => q.section === sec);
+        if (targetIndex !== -1 && targetIndex !== currentIndex) {
+          commitAndNavigate({ saveAnswer: false, moveDir: targetIndex - currentIndex });
+        }
+      }
+    });
 
     // Palette Click
     $("#palette-sections").addEventListener("click", (e) => {
