@@ -16,14 +16,16 @@
   --mono: "IBM Plex Mono", monospace;
   --transition: 150ms ease;
 
-  /* NTA question-status semantics — identical in both themes */
+  /* NTA question-status semantics — identical in both themes, except
+     --st-current (the current-question ring colour), which is overridden
+     per theme below to keep it clearly visible against each palette bg. */
   --st-not-visited-bg: #edf2f7;
   --st-not-visited-text: #2d3748;
   --st-not-visited-border: #cbd5e0;
   --st-not-answered: #e53e3e;
   --st-answered: #38a169;
   --st-marked: #6b21a8;
-  --st-current: #ed8936;
+  --st-current: #facc15; /* yellow ring — pops on the dark purple palette (default/dark) */
 
   /* Solid action buttons (white text — readable on both themes).
      Values chosen so white text keeps >= 3.0 WCAG contrast. */
@@ -210,6 +212,10 @@
    ========================================================= */
 :root[data-theme="light"] {
   color-scheme: light;
+
+  /* Blue current-question ring for the light theme (matches the theme accent
+     and stays clearly visible on the near-white palette background). */
+  --st-current: #2563eb;
 
   --page-gradient: linear-gradient(180deg, #f7f9fc 0%, #edf1f7 100%);
   --bg-0: #eef1f6;
@@ -1200,9 +1206,45 @@ button {
   border: 1px solid #ffffff;
 }
 
-.icon-current {
-  outline: 2px solid var(--st-current);
-  outline-offset: 2px;
+/* Current question: highlight ring that mirrors the exact shape of the
+   question's status icon (square, ribbon tag, pentagon or circle).
+   The old `outline` approach was invisible on clip-path icons (the outline
+   is clipped away) and was always rectangular. The ring is a 40×40 layer
+   stacked behind the 32×32 icon, leaving a uniform 4px band all around. */
+.palette-btn .nta-icon {
+  grid-area: 1 / 1; /* stacked over the current-question ring layer */
+}
+
+.palette-btn.is-current::before {
+  content: "";
+  grid-area: 1 / 1; /* same grid cell → ring stays perfectly centred on the icon */
+  width: 40px;
+  height: 40px;
+  background: var(--st-current);
+  /* Slim dark halo hugs the ring's shape no matter the clip-path (filters are
+     applied after clipping), keeping the ring readable against every status
+     colour (grey/red/green/purple) in both themes. */
+  filter: drop-shadow(0 0 2px rgba(0, 0, 0, 0.5));
+}
+
+/* Not Visited — square (icon has 4px corners → ring corners grow to 8px) */
+.palette-btn.is-current.ring-square::before {
+  border-radius: 8px;
+}
+
+/* Not Answered — red ribbon/tag shape */
+.palette-btn.is-current.ring-ribbon::before {
+  clip-path: polygon(0% 0%, 100% 0%, 100% 75%, 50% 100%, 0% 75%);
+}
+
+/* Answered — green pentagon shape */
+.palette-btn.is-current.ring-pentagon::before {
+  clip-path: polygon(50% 0%, 100% 25%, 100% 100%, 0% 100%, 0% 25%);
+}
+
+/* Marked for Review & Answered-and-Marked — purple circle */
+.palette-btn.is-current.ring-circle::before {
+  border-radius: 50%;
 }
 
 /* ---------- NTA Exam Screen Styling ---------- */
@@ -1699,6 +1741,9 @@ button {
   padding: 0;
   background: none;
   border: none;
+  display: grid;               /* icon + current ring stack in one cell */
+  place-items: center;
+  place-content: center;       /* keep both layers centred if the button is wider */
 }
 
 /* ---------- Report & Results Screen ---------- */
