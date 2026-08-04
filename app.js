@@ -936,7 +936,10 @@
     $("#r-stat-date").textContent = new Date(examStartedAt || Date.now()).toLocaleDateString('en-GB', {
       day: '2-digit', month: 'short', year: 'numeric'
     });
-    $("#r-stat-time").textContent = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+    $("#r-stat-time").textContent = new Date().toLocaleTimeString("en-US", {
+      // en-US + hour12 renders conventional uppercase meridiem, e.g. "05:12 PM"
+      hour: "2-digit", minute: "2-digit", hour12: true
+    });
     $("#r-stat-duration").textContent = `${paper.exam.durationMinutes || 180} mins`;
     $("#r-stat-timetaken").textContent = formatSecsToMinSec(resultData.timeTakenMs / 1000);
 
