@@ -484,6 +484,20 @@ button {
   overflow: hidden;
 }
 
+/* Load / error / result screens — same locked-viewport treatment as the
+   instructions and exam screens. Pinning the copyright via an auto margin
+   inside a min-height:100dvh column leaves a dead gap between the content
+   and the footer whenever the dynamic viewport unit (100dvh) changes while
+   the page scrolls (e.g. mobile browser chrome collapsing). Locking each
+   screen to the viewport and scrolling only the middle content keeps the
+   footer glued to the bottom edge — it can never drift or open gaps. */
+#screen-load.screen.active,
+#screen-error.screen.active,
+#screen-result.screen.active {
+  height: 100dvh;
+  overflow: hidden;
+}
+
 /* ---------- Global Theme Toggle (visible on every stage) ---------- */
 .theme-toggle {
   position: fixed;
@@ -725,9 +739,20 @@ button {
   max-width: 720px;
   margin: 0 auto;
   padding: 40px 20px 20px;
-  min-height: 100dvh;
+  height: 100dvh;
   display: flex;
   flex-direction: column;
+  overflow: hidden; /* lock to the viewport; only .load-main scrolls */
+}
+
+/* Scrollable intro content (brand + card + footnote). The copyright footer
+   stays outside this region so it never scrolls or leaves a gap. */
+.load-main {
+  flex: 1;
+  min-height: 0; /* allow shrinking so the content scrolls internally */
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+  overscroll-behavior: contain;
 }
 
 .load-brand {
@@ -926,6 +951,7 @@ button {
    follows the active dark/light theme via the shared tokens. */
 .app-copyright {
   margin-top: auto; /* pin to the bottom of flex-column screens */
+  flex-shrink: 0; /* never compress; stays glued to the viewport bottom */
   text-align: center;
   padding: 16px 20px 22px;
   font-size: 12px;
@@ -935,17 +961,29 @@ button {
 
 /* ---------- Error Screen ---------- */
 .error-shell {
-  min-height: 100dvh;
-  display: grid;
-  place-items: center;
-  grid-template-rows: 1fr auto; /* card centered, copyright pinned at the bottom */
-  gap: 12px;
+  height: 100dvh;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden; /* lock to the viewport; only .error-main scrolls */
   padding: 20px;
+}
+
+/* Scrollable region that keeps the card centered when it fits and lets it
+   scroll internally on short viewports — the copyright stays pinned below. */
+.error-main {
+  flex: 1;
+  min-height: 0;
+  display: flex;
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+  overscroll-behavior: contain;
 }
 
 .error-card {
   max-width: 520px;
   width: 100%;
+  margin: auto; /* centers both axes; resolves to 0 when the card overflows,
+                   so the top of a tall card is always reachable by scrolling */
   background: var(--bg-1);
   border: 1px solid var(--danger-border);
   border-radius: 12px;
@@ -1702,11 +1740,12 @@ button {
 
 /* ---------- Report & Results Screen ---------- */
 .report-app-shell {
-  min-height: 100dvh;
+  height: 100dvh;
   background: transparent; /* gradient comes from the fixed body::before layer */
   color: var(--rep-lbl);
   display: flex;
   flex-direction: column; /* keeps the copyright footer pinned at the bottom */
+  overflow: hidden; /* lock to the viewport; only the body scrolls */
 }
 
 .report-top-nav {
@@ -1719,6 +1758,7 @@ button {
   align-items: center;
   gap: 12px;
   flex-wrap: wrap;
+  flex-shrink: 0; /* nav stays fully visible; body scrolls below it */
 }
 
 .nav-left-brand {
@@ -1763,7 +1803,11 @@ button {
   width: 100%;
   margin: 0 auto;
   padding: 24px 16px 40px;
-  flex: 1; /* grows so the copyright footer is pushed to the bottom of the viewport */
+  flex: 1;
+  min-height: 0; /* allow shrinking so the report scrolls internally */
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+  overscroll-behavior: contain;
   display: flex;
   flex-direction: column;
   gap: 20px;
