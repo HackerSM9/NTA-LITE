@@ -464,6 +464,14 @@ button {
   display: block;
 }
 
+/* Exam screen is a full-height flex column (topbar / section bar / exam
+   layout / copyright footer) so the footer bar sits at the bottom of the
+   viewport, mirroring the instructions screen layout. */
+#screen-exam.screen.active {
+  display: flex;
+  flex-direction: column;
+}
+
 /* ---------- Global Theme Toggle (visible on every stage) ---------- */
 .theme-toggle {
   position: fixed;
@@ -704,7 +712,10 @@ button {
 .load-shell {
   max-width: 720px;
   margin: 0 auto;
-  padding: 40px 20px;
+  padding: 40px 20px 20px;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
 }
 
 .load-brand {
@@ -897,11 +908,26 @@ button {
   font-size: 12px;
 }
 
+/* App-wide copyright footer (load / error / result screens).
+   Unlike the NTA instructions footer (kept as-is), this one MERGES
+   with the surrounding page: no bar, no box — just muted text that
+   follows the active dark/light theme via the shared tokens. */
+.app-copyright {
+  margin-top: auto; /* pin to the bottom of flex-column screens */
+  text-align: center;
+  padding: 16px 20px 22px;
+  font-size: 12px;
+  letter-spacing: 0.02em;
+  color: var(--text-mute);
+}
+
 /* ---------- Error Screen ---------- */
 .error-shell {
   min-height: 100vh;
   display: grid;
   place-items: center;
+  grid-template-rows: 1fr auto; /* card centered, copyright pinned at the bottom */
+  gap: 12px;
   padding: 20px;
 }
 
@@ -1309,7 +1335,9 @@ button {
 .exam-layout {
   display: grid;
   grid-template-columns: 1fr 310px;
-  min-height: calc(100vh - 120px);
+  grid-template-rows: minmax(0, 1fr); /* keep panes inside the flex area; they scroll internally */
+  flex: 1;
+  min-height: 0; /* let the panes scroll internally instead of pushing the footer away */
   background: var(--exam-page-bg);
   color: var(--exam-page-text);
 }
@@ -1655,6 +1683,8 @@ button {
   min-height: 100vh;
   background: transparent; /* gradient comes from the fixed body::before layer */
   color: var(--rep-lbl);
+  display: flex;
+  flex-direction: column; /* keeps the copyright footer pinned at the bottom */
 }
 
 .report-top-nav {
@@ -1708,8 +1738,10 @@ button {
 
 .report-body-container {
   max-width: 900px;
+  width: 100%;
   margin: 0 auto;
-  padding: 24px 16px 60px;
+  padding: 24px 16px 40px;
+  flex: 1; /* grows so the copyright footer is pushed to the bottom of the viewport */
   display: flex;
   flex-direction: column;
   gap: 20px;
