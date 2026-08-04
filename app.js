@@ -299,6 +299,53 @@
   const $ = (sel, root = document) => root.querySelector(sel);
   const $$ = (sel, root = document) => Array.from(root.querySelectorAll(sel));
 
+  // ─────────────────────────────────────────────────────────────
+  // Fullscreen Management
+  // ─────────────────────────────────────────────────────────────
+  // Screens that should be in fullscreen mode (like watching a video fullscreen —
+  // hides browser tabs, address bar, bookmarks bar etc. for distraction-free exam).
+  const FULLSCREEN_SCREENS = new Set(["instructions", "exam"]);
+
+  function isFullscreenActive() {
+    return !!(document.fullscreenElement || document.webkitFullscreenElement || document.mozFullScreenElement || document.msFullscreenElement);
+  }
+
+  function requestFullscreen() {
+    const el = document.documentElement;
+    try {
+      if (el.requestFullscreen) return el.requestFullscreen();
+      if (el.webkitRequestFullscreen) return el.webkitRequestFullscreen();
+      if (el.mozRequestFullScreen) return el.mozRequestFullScreen();
+      if (el.msRequestFullscreen) return el.msRequestFullscreen();
+    } catch (_) { /* fullscreen denied — silently continue without it */ }
+    return Promise.resolve();
+  }
+
+  function exitFullscreen() {
+    try {
+      if (document.exitFullscreen) return document.exitFullscreen();
+      if (document.webkitExitFullscreen) return document.webkitExitFullscreen();
+      if (document.mozCancelFullScreen) return document.mozCancelFullScreen();
+      if (document.msExitFullscreen) return document.msExitFullscreen();
+    } catch (_) { /* ignore */ }
+    return Promise.resolve();
+  }
+
+  // Called when entering a fullscreen-eligible screen. Must be triggered from a
+  // user gesture (click handler) because browsers block programmatic fullscreen.
+  function ensureFullscreenForScreen(screenName) {
+    if (FULLSCREEN_SCREENS.has(screenName) && !isFullscreenActive()) {
+      requestFullscreen();
+    }
+  }
+
+  // Called when leaving a fullscreen screen to go back to load / error / result.
+  function ensureExitFullscreenForScreen(screenName) {
+    if (!FULLSCREEN_SCREENS.has(screenName) && isFullscreenActive()) {
+      exitFullscreen();
+    }
+  }
+
   function showScreen(id) {
     $$(".screen").forEach((s) => s.classList.remove("active"));
     const el = document.getElementById(id);
@@ -307,6 +354,8 @@
     // Every stage starts at the top — never land mid-scroll (e.g. on results).
     window.scrollTo(0, 0);
     applyStageTheme();
+    // Handle fullscreen entry/exit based on the new screen
+    ensureExitFullscreenForScreen(phase);
   }
 
   function escapeHtml(str) {
@@ -1098,6 +1147,8 @@
       $("#agree-check").checked = false;
       $("#btn-begin-exam").disabled = true;
       showScreen("screen-instructions");
+      // Enter fullscreen (must be triggered from user gesture)
+      ensureFullscreenForScreen("instructions");
     });
 
     // Validate JSON Button
@@ -1132,6 +1183,8 @@
       $("#agree-check").checked = false;
       $("#btn-begin-exam").disabled = true;
       showScreen("screen-instructions");
+      // Enter fullscreen (must be triggered from user gesture)
+      ensureFullscreenForScreen("instructions");
     });
 
     $("#btn-error-back").addEventListener("click", () => showScreen("screen-load"));
@@ -1150,6 +1203,8 @@
       showScreen("screen-exam");
       renderQuestion();
       startTimer();
+      // Ensure fullscreen is active for exam (re-enter if user exited during instructions)
+      ensureFullscreenForScreen("exam");
     });
 
     // Option Selection
