@@ -1,0 +1,148 @@
+{
+  "schemaVersion": "1.0",
+  "appName": "SM9 CBT",
+  "exam": {
+    "examId": "4050367_B PLANNING 6TH JAN 2020 Shift 2 Set 2",
+    "examTitle": "JEE Main Demo Examination",
+    "examPattern": "JEE_MAIN",
+    "createdAt": "2026-07-27T00:00:00.000Z",
+    "durationMinutes": 180,
+    "sectionOrder": ["PHYSICS", "CHEMISTRY", "MATHEMATICS"],
+    "markingScheme": {
+      "correct": 4,
+      "incorrect": -1,
+      "unattempted": 0
+    }
+  },
+  "questions": [
+    {
+      "id": "P1",
+      "section": "PHYSICS",
+      "type": "single_correct",
+      "number": 1,
+      "stem": "A body of mass 2 kg is moving with a velocity of 10 m/s. Its kinetic energy is:",
+      "options": [
+        { "key": "A", "text": "50 J" },
+        { "key": "B", "text": "100 J" },
+        { "key": "C", "text": "200 J" },
+        { "key": "D", "text": "20 J" }
+      ],
+      "answer": { "correctKeys": ["B"] },
+      "explanation": "K.E. = (1/2)mv² = (1/2)×2×100 = 100 J.",
+      "marks": { "correct": 4, "incorrect": -1 }
+    },
+    {
+      "id": "P2",
+      "section": "PHYSICS",
+      "type": "multiple_correct",
+      "number": 2,
+      "stem": "Which of the following are units of energy? (Select all that apply)",
+      "options": [
+        { "key": "A", "text": "Joule" },
+        { "key": "B", "text": "Newton-metre" },
+        { "key": "C", "text": "Watt" },
+        { "key": "D", "text": "Electron-volt" }
+      ],
+      "answer": { "correctKeys": ["A", "B", "D"] },
+      "explanation": "Watt is power. Joule, Newton-metre and eV are energy units.",
+      "marks": { "correct": 4, "incorrect": -1 }
+    },
+    {
+      "id": "P3",
+      "section": "PHYSICS",
+      "type": "integer_numerical",
+      "number": 3,
+      "stem": "The dimensional formula of force is [Mᵃ Lᵇ Tᶜ]. The value of a + b + |c| is:",
+      "options": [],
+      "answer": { "value": 4, "tolerance": 0 },
+      "explanation": "Force = [MLT⁻²] ⇒ a=1, b=1, c=−2 ⇒ 1+1+2 = 4.",
+      "marks": { "correct": 4, "incorrect": -1 }
+    },
+    {
+      "id": "C1",
+      "section": "CHEMISTRY",
+      "type": "single_correct",
+      "number": 4,
+      "stem": "The oxidation number of Cr in K₂Cr₂O₇ is:",
+      "options": [
+        { "key": "A", "text": "+3" },
+        { "key": "B", "text": "+6" },
+        { "key": "C", "text": "+7" },
+        { "key": "D", "text": "+2" }
+      ],
+      "answer": { "correctKeys": ["B"] },
+      "explanation": "2(+1) + 2(x) + 7(−2) = 0 ⇒ x = +6.",
+      "marks": { "correct": 4, "incorrect": -1 }
+    },
+    {
+      "id": "C2",
+      "section": "CHEMISTRY",
+      "type": "multiple_correct",
+      "number": 5,
+      "stem": "Which of the following are colligative properties?",
+      "options": [
+        { "key": "A", "text": "Relative lowering of vapour pressure" },
+        { "key": "B", "text": "Elevation in boiling point" },
+        { "key": "C", "text": "Depression in freezing point" },
+        { "key": "D", "text": "Optical activity" }
+      ],
+      "answer": { "correctKeys": ["A", "B", "C"] },
+      "explanation": "Optical activity is an intrinsic property, not colligative.",
+      "marks": { "correct": 4, "incorrect": -1 }
+    },
+    {
+      "id": "C3",
+      "section": "CHEMISTRY",
+      "type": "integer_numerical",
+      "number": 6,
+      "stem": "The number of moles of oxygen atoms in 88 g of CO₂ is: (Atomic mass C=12, O=16)",
+      "options": [],
+      "answer": { "value": 4, "tolerance": 0 },
+      "explanation": "88g / 44g/mol = 2 moles CO₂ ⇒ 4 moles O atoms.",
+      "marks": { "correct": 4, "incorrect": -1 }
+    },
+    {
+      "id": "M1",
+      "section": "MATHEMATICS",
+      "type": "single_correct",
+      "number": 7,
+      "stem": "If A = {1, 2, 3} and B = {2, 3, 4}, then n(A ∪ B) equals:",
+      "options": [
+        { "key": "A", "text": "3" },
+        { "key": "B", "text": "4" },
+        { "key": "C", "text": "5" },
+        { "key": "D", "text": "6" }
+      ],
+      "answer": { "correctKeys": ["B"] },
+      "explanation": "A ∪ B = {1,2,3,4} ⇒ size is 4.",
+      "marks": { "correct": 4, "incorrect": -1 }
+    },
+    {
+      "id": "M2",
+      "section": "MATHEMATICS",
+      "type": "multiple_correct",
+      "number": 8,
+      "stem": "Which of the following numbers are prime?",
+      "options": [
+        { "key": "A", "text": "17" },
+        { "key": "B", "text": "21" },
+        { "key": "C", "text": "29" },
+        { "key": "D", "text": "33" }
+      ],
+      "answer": { "correctKeys": ["A", "C"] },
+      "explanation": "17 and 29 are prime numbers.",
+      "marks": { "correct": 4, "incorrect": -1 }
+    },
+    {
+      "id": "M3",
+      "section": "MATHEMATICS",
+      "type": "integer_numerical",
+      "number": 9,
+      "stem": "The value of ∫₀¹ 2x dx is:",
+      "options": [],
+      "answer": { "value": 1, "tolerance": 0 },
+      "explanation": "∫₀¹ 2x dx = [x²]₀¹ = 1.",
+      "marks": { "correct": 4, "incorrect": -1 }
+    }
+  ]
+}
