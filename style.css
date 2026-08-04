@@ -25,7 +25,7 @@
   --st-not-answered: #e53e3e;
   --st-answered: #38a169;
   --st-marked: #6b21a8;
-  --st-current: #ed8936; /* vivid on the dark purple palette (default/dark) */
+  --st-current: #facc15; /* yellow ring — pops on the dark purple palette (default/dark) */
 
   /* Solid action buttons (white text — readable on both themes).
      Values chosen so white text keeps >= 3.0 WCAG contrast. */
@@ -213,9 +213,9 @@
 :root[data-theme="light"] {
   color-scheme: light;
 
-  /* Deeper current-question ring so it stays visible on the near-white
-     palette background (the default orange is too washed out here). */
-  --st-current: #dd6b20;
+  /* Blue current-question ring for the light theme (matches the theme accent
+     and stays clearly visible on the near-white palette background). */
+  --st-current: #2563eb;
 
   --page-gradient: linear-gradient(180deg, #f7f9fc 0%, #edf1f7 100%);
   --bg-0: #eef1f6;
