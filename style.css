@@ -921,13 +921,14 @@ button {
 }
 
 /* App-wide copyright footer (load / error / result screens).
-   Unlike the NTA instructions footer (kept as-is), this one MERGES
-   with the surrounding page: no bar, no box — just muted text that
-   follows the active dark/light theme via the shared tokens. */
+   Kept as plain content in the normal page flow — exactly like the
+   "Official NTA Scoring Scheme" note on the load screen — so it sits
+   at the very end and scrolls naturally with the page (no pinning,
+   no fixed positioning, no gaps). */
 .app-copyright {
-  margin-top: auto; /* pin to the bottom of flex-column screens */
+  margin-top: 20px; /* same spacing as the NTA scoring note */
   text-align: center;
-  padding: 16px 20px 22px;
+  padding: 8px 20px 24px;
   font-size: 12px;
   letter-spacing: 0.02em;
   color: var(--text-mute);
@@ -938,7 +939,7 @@ button {
   min-height: 100dvh;
   display: grid;
   place-items: center;
-  grid-template-rows: 1fr auto; /* card centered, copyright pinned at the bottom */
+  grid-template-rows: 1fr auto; /* card centered, copyright sits below it in flow */
   gap: 12px;
   padding: 20px;
 }
@@ -1706,7 +1707,7 @@ button {
   background: transparent; /* gradient comes from the fixed body::before layer */
   color: var(--rep-lbl);
   display: flex;
-  flex-direction: column; /* keeps the copyright footer pinned at the bottom */
+  flex-direction: column;
 }
 
 .report-top-nav {
@@ -1763,7 +1764,7 @@ button {
   width: 100%;
   margin: 0 auto;
   padding: 24px 16px 40px;
-  flex: 1; /* grows so the copyright footer is pushed to the bottom of the viewport */
+  flex: 1; /* grows so the copyright footer sits at the end of the content */
   display: flex;
   flex-direction: column;
   gap: 20px;
