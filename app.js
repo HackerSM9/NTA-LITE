@@ -736,15 +736,24 @@
         const buttons = qs
           .map(({ q, idx }) => {
             const st = getStatus(q, responses[q.id]);
-            const cur = idx === currentIndex ? "icon-current" : "";
             const iconClass =
               st === "not-visited" ? "icon-not-visited" :
               st === "not-answered" ? "icon-not-answered" :
               st === "answered" ? "icon-answered" :
               st === "marked" ? "icon-marked" : "icon-answered-marked";
+            // Ring geometry for the current-question highlight — mirrors the
+            // shape of this question's status icon (square, ribbon, pentagon
+            // or circle). Applied on the button so the ring layer can sit
+            // behind the icon even when the icon uses clip-path.
+            const ringClass =
+              st === "not-answered" ? "ring-ribbon" :
+              st === "answered" ? "ring-pentagon" :
+              st === "not-visited" ? "ring-square" : "ring-circle";
+            const curBtn =
+              idx === currentIndex ? ` is-current ${ringClass}` : "";
 
-            return `<button type="button" class="palette-btn" data-index="${idx}" title="Question ${q.number}">
-              <span class="nta-icon ${iconClass} ${cur}">${q.number < 10 ? '0' + q.number : q.number}</span>
+            return `<button type="button" class="palette-btn${curBtn}" data-index="${idx}" title="Question ${q.number}">
+              <span class="nta-icon ${iconClass}">${q.number < 10 ? '0' + q.number : q.number}</span>
             </button>`;
           })
           .join("");
