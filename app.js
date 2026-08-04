@@ -353,12 +353,6 @@
     phase = id.replace("screen-", "");
     // Every stage starts at the top — never land mid-scroll (e.g. on results).
     window.scrollTo(0, 0);
-    // Stages with internal scroll regions (load/error/result/instructions)
-    // reset those scrollers too, so returning never lands mid-scroll.
-    const innerScroller = el.querySelector(
-      ".load-main, .error-main, .report-body-container, .nta-instr-content"
-    );
-    if (innerScroller) innerScroller.scrollTop = 0;
     applyStageTheme();
     // Handle fullscreen entry/exit based on the new screen
     ensureExitFullscreenForScreen(phase);

@@ -4,7 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
   <title>SM9 CBT</title>
-  <link rel="stylesheet" href="style.css?v=1.2.1" />
+  <link rel="stylesheet" href="style.css?v=1.2.2" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet" />
@@ -23,7 +23,6 @@
     <!-- LOAD SCREEN -->
     <section id="screen-load" class="screen active">
       <div class="load-shell">
-        <div class="load-main">
         <header class="load-brand">
           <div class="brand-mark">
             <img src="logo.jpg" alt="SM9 CBT logo" />
@@ -70,7 +69,6 @@
         <footer class="load-foot">
           Official NTA Scoring Scheme · Correct +4 · Incorrect −1 · Unattempted 0
         </footer>
-        </div>
         <footer class="app-copyright">© 2026 Samarth Magdum (HackerSM9). All rights reserved.</footer>
       </div>
     </section>
@@ -78,14 +76,12 @@
     <!-- ERROR SCREEN -->
     <section id="screen-error" class="screen">
       <div class="error-shell">
-        <div class="error-main">
         <div class="error-card">
           <div class="error-badge">JSON VALIDATION FAILED</div>
           <h2>Unable to start examination</h2>
           <p class="muted">The provided file does not match the fixed schema v1.0 contract.</p>
           <ul id="error-list" class="error-list"></ul>
           <button type="button" id="btn-error-back" class="btn btn-primary">Back to Loader</button>
-        </div>
         </div>
         <footer class="app-copyright">© 2026 Samarth Magdum (HackerSM9). All rights reserved.</footer>
       </div>
