@@ -466,10 +466,22 @@ button {
 
 /* Exam screen is a full-height flex column (topbar / section bar / exam
    layout / copyright footer) so the footer bar sits at the bottom of the
-   viewport, mirroring the instructions screen layout. */
+   viewport, mirroring the instructions screen layout.
+   In fullscreen mode the viewport fills the entire screen — use 100vh to
+   lock the layout so the page never scrolls externally. */
 #screen-exam.screen.active {
   display: flex;
   flex-direction: column;
+  height: 100vh;
+  overflow: hidden;
+}
+
+/* Instructions screen — fill the viewport with internal scrolling for the
+   instruction content, so the page itself never scrolls. */
+#screen-instructions.screen.active {
+  display: block;
+  height: 100vh;
+  overflow: hidden;
 }
 
 /* ---------- Global Theme Toggle (visible on every stage) ---------- */
@@ -961,9 +973,10 @@ button {
 .nta-instr-wrapper {
   background: var(--instr-page-bg);
   color: var(--instr-text);
-  min-height: 100vh;
+  height: 100vh;
   display: flex;
   flex-direction: column;
+  overflow: hidden;
 }
 
 .nta-instr-topbar {
@@ -971,6 +984,7 @@ button {
   border-bottom: 2px solid var(--instr-topbar-border);
   padding: 12px 24px;
   padding-right: 70px; /* room for the floating theme toggle */
+  flex-shrink: 0;
 }
 
 .nta-instr-title {
@@ -986,6 +1000,9 @@ button {
   margin: 0 auto;
   padding: 24px 20px 40px;
   flex: 1;
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+  overscroll-behavior: contain;
 }
 
 .nta-instr-heading {
@@ -1112,6 +1129,7 @@ button {
   text-align: center;
   padding: 12px;
   font-size: 12px;
+  flex-shrink: 0;
 }
 
 /* ---------- NTA Standard Question Marking Icons ---------- */
@@ -1198,6 +1216,7 @@ button {
   align-items: center;
   gap: 16px;
   flex-wrap: wrap;
+  flex-shrink: 0;
 }
 
 .nta-topbar-brand {
@@ -1294,6 +1313,7 @@ button {
   display: flex;
   align-items: center;
   gap: 12px;
+  flex-shrink: 0;
 }
 
 .sec-label-txt {
